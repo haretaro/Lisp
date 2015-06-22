@@ -1,13 +1,8 @@
-(defun fizzbuzz (n)
-	(cond ((= 0 (mod n 15)) (print "fizzbuzz"))
-		((= 0 (mod n 3)) (print "fizz"))
-		((= 0 (mod n 5)) (print "buzz"))
-		(t (print n))))
+(defun fizzbuzz (n end) (if (> n end) nil (cons
+	(cond
+	((= 0 (mod n 15)) (print "fizzbuzz"))
+	((= 0 (mod n 3)) (print "fizz"))
+	((= 0 (mod n 5)) (print "buzz"))
+	(t (print n))) (fizzbuzz (+ n 1) end))))
 
-(defun show (n)
-	(when (< n 101)
-		(fizzbuzz n)
-		(show (+ n 1))))
-
-(show 1)
-
+(print (fizzbuzz 1 100))
