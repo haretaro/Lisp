@@ -1,19 +1,46 @@
-(defstruct node
-  (data)
-  (next))
+(defclass node ()
+  ((data :accessor node-data
+         :initform nil
+         :initarg :data)
 
-(defstruct mylist
-  (head)
-  (end))
+   (next :accessor node-next
+         :initform nil
+         :initarg :next)))
 
-(defun mylist-construct ()
-  (let (l)
-    (progn
-      (setq l (make-mylist))
-      (setf (mylist-head l) (make-node))
-      (setf (mylist-end l) (mylist-head l))
-      l)))
+(defclass mylist ()
+  ((head :accessor mylist-head
+         :initform (make-instance 'node)
+         :initarg :head)
+   
+   (end :accessor mylist-end
+        :initform nil
+        :initarg :end)))
 
-(defun mylist-append (self x)
-  (setf (node-data (mylist-end self)) x)
-  (setf (mylist-end self) (setf (node-next (mylist-end self)) (make-node))))
+(defmethod initialize-instance :after
+  ((c mylist) &rest args)
+  (setf (mylist-end c) (mylist-head c)))
+
+(defmethod mylist-append
+  ((self mylist) &rest data)
+  (defun add-data (data-list)
+    (setf (node-data (mylist-end self)) (car data-list))
+    (setf (node-next (mylist-end self)) (make-instance 'node))
+    (setf (mylist-end self) (node-next (mylist-end self)))
+    (if (equal (cdr data-list) nil)
+      nil
+      (add-data (cdr data-list))))
+  (add-data data))
+
+(defmethod print-object ((self node) out)
+  (print-unreadable-object (self out :type t)
+    (format out "~s" (node-data self))))
+
+(defmethod print-object ((self mylist) out)
+  (print-unreadable-object (self out :type t)
+    (defun print-node (somenode)
+      (if (equal (node-next somenode) nil)
+        nil
+        (progn
+          (format out "~s," (node-data somenode))
+          (print-node (node-next somenode)))))
+    (print-node (mylist-head self))))
