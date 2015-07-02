@@ -41,6 +41,9 @@
       (if (equal (node-next somenode) nil)
         nil
         (progn
-          (format out "~s," (node-data somenode))
+          (format out "~s" (node-data somenode))
+          (if (equal (node-next (node-next somenode)) nil)
+            nil
+            (format out  ","))
           (print-node (node-next somenode)))))
     (print-node (mylist-head self))))
