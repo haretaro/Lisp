@@ -29,7 +29,8 @@
     (if (equal (cdr data-list) nil)
       nil
       (add-data (cdr data-list))))
-  (add-data data))
+  (add-data data)
+  self)
 
 (defmethod print-object ((self node) out)
   (print-unreadable-object (self out :type t)
@@ -47,3 +48,11 @@
             (format out  ","))
           (print-node (node-next somenode)))))
     (print-node (mylist-head self))))
+
+(defmethod mylist-len
+  ((self mylist))
+   (defun node-len(somenode)
+     (if (equal (node-next somenode) nil)
+       0
+       (+ 1 (node-len (node-next somenode)))))
+   (node-len (mylist-head self)))
