@@ -56,3 +56,11 @@
        0
        (+ 1 (node-len (node-next somenode)))))
    (node-len (mylist-head self)))
+
+(defmethod mylist-get
+  ((self mylist) index)
+  (defun getdata(somenode num)
+    (if (= num 0)
+      (node-data somenode)
+      (getdata (node-next somenode) (- num 1))))
+  (getdata (mylist-head self) index))

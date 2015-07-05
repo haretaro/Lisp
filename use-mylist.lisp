@@ -1,5 +1,6 @@
 (load 'mylist.lisp)
 (setq a-list (make-instance 'mylist))
-(mylist-append a-list "the" "answer" "is" 42)
+(mylist-append a-list "the" "monarch" "will" "be" "crowned")
 (print a-list)
-(format t "~%length is ~A" (mylist-len a-list))
+(format t "~%length : ~A~%" (mylist-len a-list))
+(format t "get list 1 : ~A" (mylist-get a-list 1))
