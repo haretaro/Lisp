@@ -86,3 +86,6 @@
           (mylist-append newlist (node-data node))
           (setq node (node-next node)))
         (return newlist)))))
+
+(defmethod mylist-extend ((self mylist))
+  )
