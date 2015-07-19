@@ -8,7 +8,7 @@
          :initarg :next)))
 
 (defclass mylist ()
-  ((head :accessor mylist-head
+  ((head :accessor mylist-start
          :initform (make-instance 'node)
          :initarg :head)
    
@@ -18,7 +18,7 @@
 
 (defmethod initialize-instance :after
   ((c mylist) &rest args)
-  (setf (mylist-end c) (mylist-head c)))
+  (setf (mylist-end c) (mylist-start c)))
 
 (defmethod mylist-append
   ((self mylist) &rest data)
@@ -47,7 +47,7 @@
             nil)
           (print-node (node-next somenode)))
         nil))
-    (print-node (mylist-head self))))
+    (print-node (mylist-start self))))
 
 (defmethod mylist-len
   ((self mylist))
@@ -55,7 +55,7 @@
      (if (node-next somenode)
        (+ 1 (node-len (node-next somenode)))
        0))
-   (node-len (mylist-head self)))
+   (node-len (mylist-start self)))
 
 (defmethod mylist-get
   ((self mylist) index)
@@ -63,12 +63,12 @@
     (if (= num 0)
       (node-data somenode)
       (getdata (node-next somenode) (- num 1))))
-  (getdata (mylist-head self) index))
+  (getdata (mylist-start self) index))
 
 (defmethod mylist-clone ((self mylist))
   (let (newlist)
     (setq newlist (make-instance 'mylist))
-    (setq node (mylist-head self))
+    (setq node (mylist-start self))
     (loop
       (if (node-next node)
         (progn
@@ -79,7 +79,7 @@
 (defmethod mylist-extend ((self mylist) (li mylist))
   (let (newlist node)
     (setq newlist (mylist-clone self))
-    (setq node (mylist-head li))
+    (setq node (mylist-start li))
     (loop
       (if (node-next node)
         (progn
@@ -87,5 +87,11 @@
           (setq node (node-next node)))
         (return newlist)))))
 
-(defmethod mylist-extend ((self mylist))
-  )
+(defmethod mylist-tail ((self mylist))
+  (let (newlist)
+    (setq newlist (mylist-clone self))
+    (setf mylist-start (node-next (mylist-start newlist)))
+    newlist))
+
+(defmethod mylist-reverse ((self mylist))
+  (mylist-append (mylist-reverse (mylist-tail self)) (mylist-start self)))
